@@ -11,7 +11,9 @@ UCLASS()
 class VAMPIRESURVIVAL_API AFPSCounter : public AActor
 {
 	GENERATED_BODY()
-	
+private:
+    float MinFps = 1000;
+
 public:
     // Costruttore
     AFPSCounter()
@@ -32,7 +34,11 @@ public:
     void UpdateFPS()
     {
         float FPS = 1.0f / GetWorld()->GetDeltaSeconds();
-        GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::White, FString::Printf(TEXT("FPS: %.2f"), FPS));
+        if (FPS < MinFps)
+        {
+            MinFps = FPS;
+        }
+        GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::White, FString::Printf(TEXT("FPS: %.2f ,min FPS: %.2f"), FPS, MinFps));
     }
 
 private:

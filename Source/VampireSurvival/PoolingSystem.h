@@ -26,13 +26,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	//character
-	ACharacter* GetEnemy();
+	ACharacter* GetEnemy(FVector Spawner);
 
 
 
 	UFUNCTION(BlueprintCallable)
 	//character
-	void ActivateEnemy(ACharacter* Character);
+	void ActivateEnemy(ACharacter* Character, FVector Spawner);
 
 	UFUNCTION(BlueprintCallable)
 	//character
@@ -40,7 +40,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	//character
-	void AddActivePool(ACharacter* Character);
+	void AddActivePool(ACharacter* Character, FVector Spawner);
 
 	UFUNCTION(BlueprintCallable)
 	//character
