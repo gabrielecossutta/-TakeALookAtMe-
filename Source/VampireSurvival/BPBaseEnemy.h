@@ -12,50 +12,50 @@ class VAMPIRESURVIVAL_API ABPBaseEnemy : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
+
+	//Constructor
 	ABPBaseEnemy();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
+	//BehaviorTree of the enemy
 	class UBehaviorTree* BehaviorTree;
 
-	UPROPERTY(VisibleAnywhere)
-	int UniqueID;
-
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	
-
 	UPROPERTY(EditAnywhere)
+	//Enemy level
 	float Level;
 
 	UPROPERTY(EditAnywhere)
+	//Xp reward for player
 	float Xp;
 
 	UPROPERTY(EditAnywhere)
+	//Enemy Health (moltiply for Level)
 	float Health;
 
 	UPROPERTY(EditAnywhere)
+	//Enemy Health (moltiply for Level)
 	float Damage;
 
 	UPROPERTY(EditAnywhere)
+	//Enemy Speed
 	float Speed;
 
-	UPROPERTY(EditAnywhere)
+	//StaticMesh of the Bullet of the enemy if he is a ranger
 	UStaticMeshComponent* Ammo;
 
-	//UPROPERTY(EditAnywhere)
-	//UAnimationAsset* AttackAnimation;
-
+	//Animation of enemy attacking
+	UAnimationAsset* AttackAnimation;
 
 public:	
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void LockPosition();
-
 };

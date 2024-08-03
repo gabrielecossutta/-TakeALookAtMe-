@@ -20,24 +20,15 @@ AVampireSurvivalGameMode::AVampireSurvivalGameMode()
 	}
 }
 
-
-void AVampireSurvivalGameMode::SetEnemys(TArray<TSubclassOf<ABPBaseEnemy>> NewEnemys)
-{
-	Enemys = NewEnemys;
-}
-
 void AVampireSurvivalGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	GetSpawners();
 }
 
-
-
+//Find and return all the ATargetPoint in the level and put it in a TArray
 TArray<class ATargetPoint*> AVampireSurvivalGameMode::GetSpawners()
 {
-	TargetPoints.Empty();
-
 	for (TActorIterator<ATargetPoint> It(GetWorld()); It; ++It)
 	{
 		TargetPoints.Add(*It);
@@ -45,44 +36,8 @@ TArray<class ATargetPoint*> AVampireSurvivalGameMode::GetSpawners()
 	return TargetPoints;
 }
 
+//Return a random Spawner
 class ATargetPoint* AVampireSurvivalGameMode::GetRandomTarget()
 {
 	return AVampireSurvivalGameMode::TargetPoints[FMath::RandRange(0, TargetPoints.Num() - 1)];
-}
-
-void AVampireSurvivalGameMode::SpawnEnemy()
-{
-    if (Enemys.Num() > 0)
-    {
-        // Seleziona un indice casuale
-        int RandomIndex = FMath::RandRange(0, Enemys.Num() - 1);
-
-        // Ottieni la classe del nemico da spawnare
-        TSubclassOf<ABPBaseEnemy> EnemyClass = Enemys[RandomIndex];
-
-        // Ottieni una posizione casuale nel mondo (modifica GetRandomTarget() come necessario)
-        FVector SpawnLocation = GetRandomTarget()->GetActorLocation();
-        FRotator SpawnRotation = FRotator::ZeroRotator;
-
-        // Parametri per il metodo SpawnActor
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.Owner = this;
-
-        // Spawna il nemico
-        ABPBaseEnemy* SpawnedEnemy = GetWorld()->SpawnActor<ABPBaseEnemy>(EnemyClass, SpawnLocation, SpawnRotation, SpawnParams);
-
-        // Controlla se il nemico è stato spawnato correttamente
-        if (SpawnedEnemy)
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Nemico spawnato con successo!"));
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("Errore durante lo spawn del nemico."));
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Nessun nemico disponibile nella lista."));
-    }
 }

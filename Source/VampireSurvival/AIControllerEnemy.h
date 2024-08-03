@@ -6,9 +6,6 @@
 #include "AIController.h"
 #include "AIControllerEnemy.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class VAMPIRESURVIVAL_API AAIControllerEnemy : public AAIController
 {
@@ -16,18 +13,20 @@ class VAMPIRESURVIVAL_API AAIControllerEnemy : public AAIController
 
 protected:
 
-
 	void BeginPlay() override;
+	
+	//Called when the Pawn is Possesed by the BehaviourTree
 	void OnPossess(APawn* InPawn);
+
 	void Tick(float DeltaTime) override;
+
 public:
-	//UPROPERTY(EditAnywhere)
-	//UBehaviorTree* AIBTAsset;
+
 	UPROPERTY(EditAnywhere)
+	//BehavioutTree Asset
 	class UBehaviorTree* BTAsset;
 
 	UFUNCTION(BlueprintCallable)
+	//Return the BlackBoardComponent
 	UBlackboardComponent* GetBlackboardComponents();
-
-
 };

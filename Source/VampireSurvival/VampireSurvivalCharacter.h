@@ -50,14 +50,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vision")
-	float ViewAngle;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vision")
+	//float ViewAngle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vision")
-	float ViewDistance;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vision")
+	//float ViewDistance;
 
-	// Funzione per verificare se un nemico è nel campo visivo
-	bool IsEnemyInView(AActor* Enemy);
+	//// Funzione per verificare se un nemico è nel campo visivo
+	//bool IsEnemyInView(AActor* Enemy);
 
 protected:
 	/** Called for movement input */

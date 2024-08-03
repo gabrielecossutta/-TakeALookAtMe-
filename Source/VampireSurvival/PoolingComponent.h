@@ -13,9 +13,9 @@ class VAMPIRESURVIVAL_API UPoolingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
+	//Costructor
 	UPoolingComponent();
-
+	~UPoolingComponent();
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

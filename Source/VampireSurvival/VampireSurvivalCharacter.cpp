@@ -33,6 +33,7 @@ AVampireSurvivalCharacter::AVampireSurvivalCharacter()
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
+
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
@@ -85,18 +86,27 @@ void AVampireSurvivalCharacter::SetupPlayerInputComponent(UInputComponent* Playe
 	}
 }
 
-
-bool AVampireSurvivalCharacter::IsEnemyInView(AActor* Enemy)
-{
-	FVector PlayerLocation = GetActorForwardVector();
-	FVector EnemyLocation = Enemy->GetActorLocation();
-	FVector DirectionToEnemy = (EnemyLocation - PlayerLocation).GetSafeNormal();
-	FVector ForwardVector = GetActorForwardVector();
-	float Angle = FMath::Acos(FVector::DotProduct(ForwardVector, DirectionToEnemy));
-	Angle = FMath::RadiansToDegrees(Angle);
-	float Distance = FVector::Dist(PlayerLocation, EnemyLocation);
-	return (Angle <= ViewAngle && Distance <= ViewDistance);
-}
+//Move to CullingSystem
+//bool AVampireSurvivalCharacter::IsEnemyInView(AActor* Enemy)
+//{
+//	//Player location and forward
+//	FVector PlayerLocation = GetActorForwardVector();
+//	FVector ForwardVector = GetActorForwardVector();
+//
+//	//Enemy location and forward
+//	FVector EnemyLocation = Enemy->GetActorLocation();
+//	FVector DirectionToEnemy = (EnemyLocation - PlayerLocation).GetSafeNormal();
+//
+//	//View angle
+//	float Angle = FMath::Acos(FVector::DotProduct(ForwardVector, DirectionToEnemy));
+//	Angle = FMath::RadiansToDegrees(Angle);
+//
+//	//Distance from Player
+//	float Distance = FVector::Dist(PlayerLocation, EnemyLocation);
+//
+//	//return true if in range, return false is not
+//	return (Angle <= ViewAngle && Distance <= ViewDistance);
+//}
 
 void AVampireSurvivalCharacter::Move(const FInputActionValue& Value)
 {

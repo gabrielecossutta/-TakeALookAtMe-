@@ -12,28 +12,22 @@ class AVampireSurvivalGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
-public:
+private:
 
+	//Constructor
 	AVampireSurvivalGameMode();
 
-	UPROPERTY(EditAnywhere)
-	TArray<class ATargetPoint*> TargetPoints;
-	
-	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<ABPBaseEnemy>> Enemys;
-
-	UFUNCTION(BlueprintCallable)
-	void SetEnemys(TArray<TSubclassOf<ABPBaseEnemy>> NewEnemys);
-
+	//BeginPlay
 	void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable,BlueprintPure)
+	//Array of TargetPoints
+	TArray<class ATargetPoint*> TargetPoints;
+
+	//Return all the Spawner
 	TArray<class ATargetPoint*> GetSpawners();
 
-	UFUNCTION(BlueprintCallable)
-	void SpawnEnemy();
-
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	//Return a random Target
 	class ATargetPoint* GetRandomTarget();
 
 };
