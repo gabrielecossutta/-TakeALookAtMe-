@@ -1,131 +1,152 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
+//------------------------------------------------------------------Reusable Pooling System------------------------------------------------------------------
 
 #include "PoolingSystem.h"
-#include "PoolingComponent.h" 
-#include "Kismet/GameplayStatics.h"
 #include "Engine/Engine.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-// Sets default values
+#include "PoolingComponent.h" 
+#include "Kismet/GameplayStatics.h"
+
+
+//Constructor
 APoolingSystem::APoolingSystem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+ 	// Set this actor to not call Tick()
+	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
+//Destructor
+APoolingSystem::~APoolingSystem()
+{
+}
+
+//BeginPlay
 void APoolingSystem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Initialize the DormentCharacterPool
 	InizializePool();
-	
 }
 
-// Called every frame
+//Tick
 void APoolingSystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-
 }
 
-ACharacter* APoolingSystem::GetEnemy(FVector Spawner)
+//Return an available enemy from the DormentCharacterPool
+ACharacter* APoolingSystem::GetEnemy(FVector SpawnerLocation)
 {
-	if (CharacterPool.Num() > 0)
+	//Check if there are Character available in the DormentCharacterPool
+	if (DormantCharacterPool.Num() > 0)
 	{
+		//Get a random Character from the DormentCharacterPool
 		int32 IndexPool = GetRandomPoolNumber();
-		RandomCharacter = CharacterPool[IndexPool];
-		AddActivePool(RandomCharacter, Spawner);
-		UE_LOG(LogTemp, Warning, TEXT("%d"),CharacterPool.Num());
+		RandomCharacter = DormantCharacterPool[IndexPool];
+
+		//Add the Character in the ActiveCharacterPool
+		AddActivePool(RandomCharacter, SpawnerLocation);
+
+		//return the Character
 		return RandomCharacter;
 	}
+
+	//return NULL if the DormentCharacterPool is empty
 	return nullptr;
 }
 
-void APoolingSystem::ActivateEnemy(ACharacter* Character, FVector Spawner)
+//Called when a Enemy is choose from the DormentCharacterPool, Here the enemy is Activated (Render, Collision, Location)
+void APoolingSystem::ActivateEnemy(ACharacter* Character, FVector SpawnerLocation)
 {
+	//Check if the Character is valid
 	if (Character)
 	{
-		//Character->SetActorHiddenInGame(false); // Hide the character
-		Character->SetActorEnableCollision(true); // Disable collision
-		Character->SetActorTickEnabled(true); // Disable ticking
-		Character->SetActorLocation(Spawner); // Set character's location to NewPosition
+		Character->SetActorHiddenInGame(false); //Show the character
+		Character->SetActorEnableCollision(true); //Activate collision
+		Character->SetActorLocation(SpawnerLocation); // Set character's location to SpawnerLocation
 
-		// Disable character movement
+		//Find and check the Character Movement Component of the Character 
 		UCharacterMovementComponent* CharacterMovement = Character->FindComponentByClass<UCharacterMovementComponent>();
 		if (CharacterMovement)
 		{
-			CharacterMovement->SetMovementMode(MOVE_Walking); // Imposta il movimento come camminare (o altro, a seconda del tipo di movimento richiesto)
+			//Set the Character Movement Component mode to walking
+			CharacterMovement->SetMovementMode(MOVE_Walking); 
 		}
 	}
 }
 
+//Called when a Enemy is killed, Here the enemy is Deactivated (Render, Collision, Location)
 void APoolingSystem::DisableEnemy(ACharacter* Character)
 {
-
+	//Check if the Character is valid
 	if (Character)
 	{
-		FVector NewPosition(10000, 100000, 0); // Fixed position to lock the character to
-		//Character->SetActorHiddenInGame(true); // Hide the character
-		Character->SetActorEnableCollision(false); // Disable collision
-		Character->SetActorTickEnabled(false); // Disable ticking
-		Character->SetActorLocation(NewPosition); // Set character's location to NewPosition
+		//Fixed position to hide the Character
+		FVector PoolingLocation(0, 0, -1000); 
 
-		// Disable character movement
+		Character->SetActorHiddenInGame(true); //Hide the Character
+		Character->SetActorEnableCollision(false); //Disable Character collision
+		Character->SetActorLocation(PoolingLocation); //Set Character location to PoolingLocation
+
+		//Find and check the Character movement component of the Character 
 		UCharacterMovementComponent* CharacterMovement = Character->FindComponentByClass<UCharacterMovementComponent>();
 		if (CharacterMovement)
 		{
+			//Disable the Character movement component
 			CharacterMovement->DisableMovement();
+
+			//Remove the Character from the ActiveCharacterPool
 			ActiveCharacterPool.Remove(Character);
-			CharacterPool.Add(Character);
+
+			//Add the Character to the DormentCharacterPool
+			DormantCharacterPool.Add(Character);
 		}
 	}
 }
 
-void APoolingSystem::AddActivePool(ACharacter* Character, FVector Spawner)
+//Add the choosen Character to the ActiveCharacterPool
+void APoolingSystem::AddActivePool(ACharacter* Character, FVector SpawnerLocation)
 {
-	CharacterPool.Remove(Character);
+	//Remove the Character from the DormantCharacterPool
+	DormantCharacterPool.Remove(Character);
+
+	//Add the Character in the ActiveCharacterPool
 	ActiveCharacterPool.Add(Character);
-	ActivateEnemy(Character, Spawner);
+	
+	//Active the Character
+	ActivateEnemy(Character, SpawnerLocation);
 }
 
-//migliorare o togliere
-void APoolingSystem::RemoveActivePool(ACharacter* Character)
-{
-	UE_LOG(LogTemp, Warning, TEXT("-------------"), CharacterPool.Num());
-	uint32 UniqueID = Character->GetUniqueID();
-	for (ACharacter* CharacterToDeactivate : ActiveCharacterPool)
-	{
-		if (UniqueID == Character->GetUniqueID())
-		{
-			DisableEnemy(CharacterToDeactivate);
-
-			ActiveCharacterPool.Remove(CharacterToDeactivate);
-			CharacterPool.Add(CharacterToDeactivate);
-		}
-	}
-}
-
+//Initialize the DormentCharacterPool with all the enemy in the level
 void APoolingSystem::InizializePool()
 {
+	//TArray of AActor
 	TArray<AActor*> ActorsFound;
+
+	//Find all the Actors in the world derivated from ACharacter and fill the TArray
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), ActorsFound);
+
+	//For every Actor in the TArray we check if they have a UPoolingComponent
 	for (AActor* ActorFound : ActorsFound)
 	{
+		//Cast Actor to ACharacter
 		ACharacter* CharacterFound = Cast<ACharacter> (ActorFound);
+
 		if (CharacterFound->FindComponentByClass<UPoolingComponent>())
 		{
-				CharacterPool.Add(CharacterFound);
-				DisableEnemy(CharacterFound);
+			//Add the Character with the PoolingComponent to the DormantCharacterPool
+			DormantCharacterPool.Add(CharacterFound);
+
+			//Deactivate the Character
+			DisableEnemy(CharacterFound);
 		}
 	}
-
 }
 
-
-
+//Return a random integer from 0 to DormentCharacterPool-1
 int APoolingSystem::GetRandomPoolNumber()
 {
-	return FMath::RandRange(0, CharacterPool.Num() - 1);
+	return FMath::RandRange(0, DormantCharacterPool.Num() - 1);
 }

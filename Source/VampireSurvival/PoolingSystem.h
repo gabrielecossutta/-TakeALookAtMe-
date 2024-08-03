@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
+
+//------------------------------------------------------------------Reusable Pooling System------------------------------------------------------------------
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -11,58 +11,48 @@ class VAMPIRESURVIVAL_API APoolingSystem : public AActor
 {
 	GENERATED_BODY()
 
-public:
-	UPROPERTY(EditAnywhere)
-	TArray<ACharacter*> CharacterPool;
+private:
 
-	UPROPERTY(EditAnywhere)
-	TArray<ACharacter*> ActiveCharacterPool;
+	//TArray of all the Dormant Character
+	UPROPERTY(VisibleInstanceOnly)
+	TArray<ACharacter*> DormantCharacterPool;
 
-	UPROPERTY(EditAnywhere)
+	//TArray of all the Active Character
+	UPROPERTY(VisibleInstanceOnly)
+	TArray<ACharacter*> ActiveCharacterPool; 
+
+	//Random Character from the DormantCharacterPool
 	ACharacter* RandomCharacter;
 
-	UPROPERTY(EditAnywhere)
-	uint32 Size;
+	//Return a Character from the DormantCharacterPool
+	UFUNCTION(BlueprintCallable, Category = "Pooling")
+	ACharacter* GetEnemy(FVector SpawnerLocation); 
 
-	UFUNCTION(BlueprintCallable)
-	//character
-	ACharacter* GetEnemy(FVector Spawner);
+	//Active a DormantCharacter
+	void ActivateEnemy(ACharacter* Character, FVector SpawnerLocation); 
 
+	UFUNCTION(BlueprintCallable, Category = "Pooling")
+	//Deactivate a Active Character
+	void DisableEnemy(ACharacter* Character); 
 
+	//Add a Character in the ActiveCharacterPool
+	void AddActivePool(ACharacter* Character, FVector SpawnerLocation); 
 
-	UFUNCTION(BlueprintCallable)
-	//character
-	void ActivateEnemy(ACharacter* Character, FVector Spawner);
+	//Inizialize the DormantCharacterPool with all the Character with a PoolingComponent
+	void InizializePool(); 
 
-	UFUNCTION(BlueprintCallable)
-	//character
-	void DisableEnemy(ACharacter* Character);
+	//Return a integer from 0 to DormantCharacterPool
+	int GetRandomPoolNumber(); 
 
-	UFUNCTION(BlueprintCallable)
-	//character
-	void AddActivePool(ACharacter* Character, FVector Spawner);
-
-	UFUNCTION(BlueprintCallable)
-	//character
-	void RemoveActivePool(ACharacter* Character);
-
-	UFUNCTION(BlueprintCallable)
-	void InizializePool();
-
-	UFUNCTION(BlueprintCallable)
-	//character
-	int GetRandomPoolNumber();
-
-public:	
-	// Sets default values for this actor's properties
-	APoolingSystem();
-
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	//Costuctor
+	APoolingSystem();
+
+	//Destructor
+	~APoolingSystem();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };

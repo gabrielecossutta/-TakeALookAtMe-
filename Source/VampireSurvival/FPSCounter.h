@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Engine.h"
+#include "EngineGlobals.h"
 #include "FPSCounter.generated.h"
 
 UCLASS()
@@ -12,35 +12,44 @@ class VAMPIRESURVIVAL_API AFPSCounter : public AActor
 {
 	GENERATED_BODY()
 private:
-    float MinFps = 1000;
 
-public:
-    // Costruttore
+    float MinFPS = 1000;
+
+    //Constructor
     AFPSCounter()
     {
         PrimaryActorTick.bCanEverTick = false;
     }
 
-    // Funzione per il tick
+    //BeginPlay
     virtual void BeginPlay() override
     {
         Super::BeginPlay();
 
-        // Avvia il timer per aggiornare gli FPS ogni secondo
-        GetWorldTimerManager().SetTimer(TimerHandle_FPSUpdate, this, &AFPSCounter::UpdateFPS, 1.0f, true);
+        //Esecuted only in editor
+        #if WITH_EDITOR
+            //Set a timer to call UpdateFPS() every second
+            GetWorldTimerManager().SetTimer(TimerHandle_FPSUpdate, this, &AFPSCounter::UpdateFPS, 1.0f, true);
+        #endif
     }
 
-    // Funzione per aggiornare gli FPS
+    //Write the current Fps and the Lowest Fps on screen
     void UpdateFPS()
     {
+        //calculate the FPS
         float FPS = 1.0f / GetWorld()->GetDeltaSeconds();
-        if (FPS < MinFps)
+        
+        //Check if the FPS is Lower of MinFPS
+        if (FPS < MinFPS)
         {
-            MinFps = FPS;
+            //Set new MinFPS
+            MinFPS = FPS;
         }
-        GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::White, FString::Printf(TEXT("FPS: %.2f ,min FPS: %.2f"), FPS, MinFps));
+
+        //Write the FPS on screen
+        GEngine->AddOnScreenDebugMessage(0, 1.0f, FColor::White, FString::Printf(TEXT("FPS: %.2f ,min FPS: %.2f"), FPS, MinFPS));
     }
 
-private:
+    //Timer
     FTimerHandle TimerHandle_FPSUpdate;
 };
