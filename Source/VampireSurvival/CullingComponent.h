@@ -4,17 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PoolingComponent.generated.h"
+#include "CullingComponent.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class VAMPIRESURVIVAL_API UPoolingComponent : public UActorComponent
+class VAMPIRESURVIVAL_API UCullingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	//Costructor
-	UPoolingComponent();
-	~UPoolingComponent();
+	UCullingComponent();
+	~UCullingComponent();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;

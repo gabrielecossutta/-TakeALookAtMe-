@@ -23,4 +23,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere)
+	TArray<AActor*> AllActor;
+
+	TArray<AActor*> HiddenActor;
+
+	TArray<AActor*> ActiveActor;
+
+	ACharacter* PlayerReference;
+
+	float FOVDegrees;
+
+	bool CheckIfInFront(AActor* ActorToCheck);
+
+	void CheckActors();
+
+	void FillArray();
+	
+
 };
