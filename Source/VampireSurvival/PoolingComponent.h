@@ -12,8 +12,9 @@ class VAMPIRESURVIVAL_API UPoolingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	//Costructor
+	//Constructor
 	UPoolingComponent();
+	//Destructor
 	~UPoolingComponent();
 
 	// Called when the game starts
@@ -21,6 +22,5 @@ class VAMPIRESURVIVAL_API UPoolingComponent : public UActorComponent
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	
 };

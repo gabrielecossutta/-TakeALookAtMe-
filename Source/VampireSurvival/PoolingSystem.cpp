@@ -8,20 +8,19 @@
 #include "PoolingComponent.h" 
 #include "Kismet/GameplayStatics.h"
 
-
-//Constructor
+//Constructor: Sets default values
 APoolingSystem::APoolingSystem()
 {
  	// Set this actor to not call Tick()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-//Destructor
+//Destructor: Called when the instance is destroyed
 APoolingSystem::~APoolingSystem()
 {
 }
 
-//BeginPlay
+//BeginPlay: Called when the game starts or when spawned
 void APoolingSystem::BeginPlay()
 {
 	Super::BeginPlay();
@@ -30,7 +29,7 @@ void APoolingSystem::BeginPlay()
 	InizializePool();
 }
 
-//Tick
+//Tick: Called every frame
 void APoolingSystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

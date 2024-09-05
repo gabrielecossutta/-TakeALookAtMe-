@@ -1,5 +1,6 @@
 #pragma once
 
+
 //------------------------------------------------------------------Reusable Pooling System------------------------------------------------------------------
 
 #include "CoreMinimal.h"
@@ -44,15 +45,15 @@ private:
 	//Return a integer from 0 to DormantCharacterPool
 	int GetRandomPoolNumber(); 
 
-	// Called when the game starts or when spawned
+	// BeginPlay: Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//Costuctor
+	//Constructor: Sets default values
 	APoolingSystem();
 
-	//Destructor
+	//Destructor: Called when the instance is destroyed
 	~APoolingSystem();
 
-	// Called every frame
+	//Tick: Called every frame
 	virtual void Tick(float DeltaTime) override;
 };

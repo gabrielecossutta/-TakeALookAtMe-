@@ -1,6 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
+
+
+//------------------------------------------------------------------Reusable Pooling System------------------------------------------------------------------
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -9,35 +10,38 @@
 UCLASS()
 class VAMPIRESURVIVAL_API ACullingSystem : public AActor
 {
-	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
+	GENERATED_BODY()
+private:	
+
+	//Constructor: Sets default values
 	ACullingSystem();
 
-protected:
-	// Called when the game starts or when spawned
+	//Destructor: Called when the instance is destroyed
+	~ACullingSystem();
+
+	//BeginPlay: Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
+	//Tick: Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere)
-	TArray<AActor*> AllActor;
+	//TArray conteing all the Actor with a UCullingComponent
+	TArray<AActor*> AllCullingActor;
 
-	TArray<AActor*> HiddenActor;
-
-	TArray<AActor*> ActiveActor;
-
+	//Player Reference for Position
 	ACharacter* PlayerReference;
 
+	//CullingDegrees FOV + some Degrees for the culling see https://github.com/gabrielecossutta/-TakeALookAtMe-?tab=readme-ov-file#CULLING
 	float FOVDegrees;
 
-	bool CheckIfInFront(AActor* ActorToCheck);
-
+	//Method for calling CheckIfInfront for every Actor
 	void CheckActors();
 
+	//Method that return a boolean value indicating whether the enemy is in front of the player
+	bool CheckIfInFront(AActor* ActorToCheck);
+
+	//Method to initialize the AllCullingActor
 	void FillArray();
 	
 
