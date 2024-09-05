@@ -3,9 +3,10 @@
 
 What I have implemented so far:
 
- [**POOLING**](#POOLING)
- 
  [**CULLING**](#CULLING)
+ 
+ [**POOLING**](#POOLING)
+
 
  
 ________________
