@@ -3,11 +3,16 @@
 
 What I have implemented so far:
 
- [**CULLING**](#CULLING)
  
- [**POOLING**](#POOLING)
+ 
 
 
+- [x] [**CULLING**](#CULLING)
+- [x] [**POOLING**](#POOLING)
+- [ ] Enemies Models
+- [ ] Power-Ups
+- [ ] Environment
+- [ ] GameRules
  
 ________________
 
